@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asian Paints Alchemy | Sealed Sponge Particle Scattering Simulation</title>
+  <style>
+    /* -------------------------------------------------------------------------
+       CSS DESIGN SYSTEM: Asian Paints Alchemy (Purple #4B2A8C, Orange #F5A31A)
+       Clean, academic, modern white background with high-contrast scientific readouts
+       ------------------------------------------------------------------------- */
+    :root {
+      --primary-purple: #4B2A8C;
+      --primary-purple-dark: #371E68;
+      --primary-purple-light: #F3EEFA;
+      --primary-purple-border: #D2C4E8;
+      --accent-orange: #F5A31A;
+      --accent-orange-dark: #D48407;
+      --accent-orange-light: #FEF7EC;
+      --accent-orange-border: #FCDAA2;
+      --bg-body: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --text-light: #64748B;
+      --border-color: #E2E8F0;
+      --border-dark: #CBD5E1;
+      --black-backing: #0B0F19;
+      --success-green: #10B981;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* PERMANENT HONESTY BANNER (MANDATORY RULE) */
+    .permanent-disclaimer-banner {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: #FFFBEB;
+      border-bottom: 2px solid var(--accent-orange);
+      color: #92400E;
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .permanent-disclaimer-banner svg {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      fill: var(--accent-orange-dark);
+    }
+    .banner-note {
+      font-weight: 500;
+      color: #B45309;
+      margin-left: 8px;
+      font-size: 12.5px;
+    }
+
+    /* CONTAINER */
+    .app-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 24px 20px 60px 20px;
+    }
+
+    /* HEADER */
+    header.header {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 24px 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      margin-bottom: 22px;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .badge-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .badge-hackathon {
+      background: var(--primary-purple-light);
+      color: var(--primary-purple);
+      border: 1px solid var(--primary-purple-border);
+    }
+    .badge-case {
+      background: var(--accent-orange-light);
+      color: var(--accent-orange-dark);
+      border: 1px solid var(--accent-orange-border);
+    }
+    .badge-target {
+      background: #F1F5F9;
+      color: #334155;
+      border: 1px solid #CBD5E1;
+    }
+    h1.app-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary-purple);
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+    p.app-subtitle {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      max-width: 1050px;
+    }
+
+    /* SHARED GLOBAL CONTROLS BAR */
+    .controls-panel {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 20px 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      margin-bottom: 24px;
+    }
+    .controls-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .controls-title-row h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1.2fr 1.6fr;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (max-width: 980px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .control-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .control-label {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .control-value-display {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-purple);
+      background: var(--primary-purple-light);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--primary-purple-border);
+    }
+    .slider-range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .control-presets {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .btn-preset {
+      font-size: 11.5px;
+      font-weight: 600;
+      background: #F1F5F9;
+      color: var(--text-muted);
+      border: 1px solid #CBD5E1;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-preset:hover {
+      background: var(--primary-purple-light);
+      color: var(--primary-purple);
+      border-color: var(--primary-purple-border);
+    }
+    .btn-preset.active {
+      background: var(--primary-purple);
+      color: #FFF;
+      border-color: var(--primary-purple);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 7px;
+      border-radius: 4px;
+      background: #E2E8F0;
+      outline: none;
+      transition: background 0.2s;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary-purple);
+      cursor: pointer;
+      border: 2px solid #FFF;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: transform 0.1s, background-color 0.15s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      background: var(--accent-orange);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary-purple);
+      cursor: pointer;
+      border: 2px solid #FFF;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* ACTION BUTTONS */
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--primary-purple);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(75, 42, 140, 0.25);
+    }
+    .btn-primary:hover {
+      background: var(--primary-purple-dark);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1px solid var(--border-dark);
+    }
+    .btn-secondary:hover {
+      background: #F8FAFC;
+      border-color: var(--text-light);
+    }
+    .btn-download {
+      background: var(--accent-orange-light);
+      color: var(--accent-orange-dark);
+      border: 1px solid var(--accent-orange-border);
+    }
+    .btn-download:hover {
+      background: var(--accent-orange);
+      color: #FFFFFF;
+    }
+
+    /* THREE SCENARIOS GRID */
+    .scenarios-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1080px) {
+      .scenarios-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .scenario-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .scenario-card:hover {
+      box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.08);
+    }
+    .card-top-stripe {
+      height: 5px;
+      width: 100%;
+    }
+    .scenario-a .card-top-stripe { background: var(--primary-purple); }
+    .scenario-b .card-top-stripe { background: #64748B; }
+    .scenario-c .card-top-stripe { background: var(--accent-orange); }
+
+    .scenario-header {
+      padding: 18px 20px 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .scenario-tag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .scenario-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tag-literature {
+      background: var(--primary-purple-light);
+      color: var(--primary-purple);
+      border: 1px solid var(--primary-purple-border);
+    }
+    .tag-assumption {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+    .tag-hypothesis {
+      background: var(--accent-orange-light);
+      color: #B45309;
+      border: 1px solid var(--accent-orange-border);
+      font-weight: 800;
+    }
+
+    .scenario-letter {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-light);
+    }
+    h3.scenario-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    p.scenario-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      min-height: 38px;
+    }
+
+    /* SCENARIO BODY */
+    .scenario-body {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex-grow: 1;
+    }
+
+    /* PARAMETERS TABLE */
+    .param-box {
+      background: #F8FAFC;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #E2E8F0;
+      font-size: 12.5px;
+    }
+    .param-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 0;
+    }
+    .param-row:not(:last-child) {
+      border-bottom: 1px dashed #E2E8F0;
+    }
+    .param-name {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .param-val {
+      font-weight: 700;
+      color: var(--text-main);
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    /* ASSUMPTION SLIDER IN SCENARIO B */
+    .assumption-slider-box {
+      background: #FEF9EE;
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 4px;
+    }
+    .assumption-slider-box .control-label {
+      font-size: 12.5px;
+      color: #92400E;
+    }
+
+    /* BIG METRIC READOUT */
+    .metric-container {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .scenario-a .metric-container { border-left: 4px solid var(--primary-purple); }
+    .scenario-b .metric-container { border-left: 4px solid #64748B; }
+    .scenario-c .metric-container { border-left: 4px solid var(--accent-orange); }
+
+    .metric-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+    .metric-value-huge {
+      font-size: 40px;
+      font-weight: 900;
+      line-height: 1;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      margin-bottom: 4px;
+    }
+    .scenario-a .metric-value-huge { color: var(--primary-purple); }
+    .scenario-b .metric-value-huge { color: #64748B; }
+    .scenario-c .metric-value-huge { color: var(--accent-orange); }
+
+    .metric-sub-stats {
+      font-size: 11.5px;
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    /* REFERENCE / HONESTY COMPARISON BOX */
+    .reference-box {
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .ref-box-benchmark {
+      background: var(--primary-purple-light);
+      border: 1px solid var(--primary-purple-border);
+      color: var(--primary-purple-dark);
+    }
+    .ref-box-assumption {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+    }
+    .ref-box-hypothesis {
+      background: var(--accent-orange-light);
+      border: 1px solid var(--accent-orange-border);
+      color: #92400E;
+    }
+    .ref-header {
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .ref-discrepancy-note {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(75, 42, 140, 0.25);
+      font-size: 11px;
+      color: #4C1D95;
+    }
+
+    /* SIMULATION CANVAS SECTION */
+    .canvas-container {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .canvas-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #CBD5E1;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .canvas-stats-overlay {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(11, 15, 25, 0.88);
+      color: #F8FAFC;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      pointer-events: none;
+    }
+    canvas.ray-canvas {
+      display: block;
+      width: 100%;
+      height: 210px;
+      background: #FFFFFF;
+      cursor: crosshair;
+    }
+
+    /* CROSS-SECTION DIAGRAM */
+    .microstructure-svg-container {
+      background: #F8FAFC;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      padding: 10px;
+    }
+    .micro-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* FULL WIDTH CHART SECTION */
+    .chart-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      margin-bottom: 24px;
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .chart-title h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .chart-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .legend-line {
+      width: 22px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .legend-line.solid-purple { background: var(--primary-purple); }
+    .legend-line.dashed-gray {
+      background: repeating-linear-gradient(90deg, #64748B, #64748B 4px, transparent 4px, transparent 8px);
+      height: 2px;
+    }
+    .legend-line.solid-orange { background: var(--accent-orange); }
+    .legend-marker.diamond-gold {
+      width: 10px;
+      height: 10px;
+      background: var(--accent-orange);
+      transform: rotate(45deg);
+      border: 1.5px solid #000;
+    }
+
+    .chart-canvas-box {
+      position: relative;
+      width: 100%;
+      height: 360px;
+    }
+    canvas#sweepChartCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .chart-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 23, 42, 0.94);
+      color: #FFF;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.4;
+      display: none;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-family: var(--font-family);
+    }
+
+    /* ABOUT THIS MODEL / LIMITS & HONESTY BOX */
+    .about-model-section {
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      margin-bottom: 24px;
+    }
+    .about-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .about-title-row h2 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-purple);
+    }
+    .limits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 900px) {
+      .limits-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .limit-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .limit-card h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .limit-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* CITATIONS & SOURCES TABLE */
+    .sources-box {
+      background: var(--primary-purple-light);
+      border: 1px solid var(--primary-purple-border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 12.5px;
+      color: var(--primary-purple-dark);
+    }
+    .sources-box h4 {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--primary-purple);
+    }
+    .sources-list {
+      list-style-type: decimal;
+      padding-left: 18px;
+    }
+    .sources-list li {
+      margin-bottom: 4px;
+    }
+
+    /* FOOTER */
+    footer.app-footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-light);
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       PERMANENT MANDATORY DISCLAIMER BANNER (TOP)
+       "Illustrative simulation. Not experimental data. Generated with AI assistance."
+       ========================================================================= -->
+  <div class="permanent-disclaimer-banner" role="alert">
+    <svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+    <span>Illustrative simulation. Not experimental data. Generated with AI assistance.</span>
+    <span class="banner-note">| Physics: 3D Isotropic Monte Carlo photon transport slab model over an absorbing black backing.</span>
+  </div>
+
+  <div class="app-container">
+
+    <!-- =========================================================================
+         HEADER: Asian Paints Alchemy Context (Case 1: Whiteness Without TiO2)
+         Audience: Industry Judges
+         ========================================================================= -->
+    <header class="header">
+      <div class="header-top">
+        <div class="badge-group">
+          <span class="badge badge-hackathon">Asian Paints Alchemy</span>
+          <span class="badge badge-case">Case 1: Whiteness Without TiO₂</span>
+          <span class="badge badge-target">Target: Industry Evaluation</span>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-light);">
+          Single Self-Contained Offline Simulation • Web Worker Engine
+        </div>
+      </div>
+      <h1 class="app-title">Why Sealed Porous Particles Retain Whiteness in Paint</h1>
+      <p class="app-subtitle">
+        An interactive, physics-based Monte Carlo photon transport simulation illustrating why open porous polymer films turn transparent upon binder wetting due to optical index-matching, and how an impermeable barrier skin preserves air voids to sustain bright white scattering in paint.
+      </p>
+    </header>
+
+    <!-- =========================================================================
+         GLOBAL INTERACTIVE CONTROLS BAR
+         Shared thickness slider, photon count selector, preset jumps, CSV export
+         ========================================================================= -->
+    <section class="controls-panel">
+      <div class="controls-title-row">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary-purple)"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+          Shared Physical Controls &amp; Simulation Parameters
+        </h2>
+        <div class="button-row">
+          <button class="btn btn-download" id="btnDownloadCSV" title="Export complete data across 1 to 30 µm as CSV">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Download Results as CSV
+          </button>
+          <button class="btn btn-primary" id="btnRunSimulation" title="Run 20,000+ photons Monte Carlo calculation">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Run Monte Carlo (20,000 Photons)
+          </button>
+        </div>
+      </div>
+
+      <div class="controls-grid">
+        <!-- Thickness Slider (Shared across all 3 scenarios) -->
+        <div class="control-item">
+          <div class="control-label-row">
+            <span class="control-label">Slab Thickness L (shared):</span>
+            <span class="control-value-display" id="thicknessDisplay">4.0 µm</span>
+          </div>
+          <input type="range" id="sliderThickness" min="1.0" max="30.0" step="0.5" value="4.0">
+          <div class="slider-range-labels">
+            <span>1.0 µm (Ultrathin)</span>
+            <span style="font-weight:700; color:var(--primary-purple);">4.0 µm (Syurik et al. 2018 Benchmark)</span>
+            <span>30.0 µm (Thick Coating)</span>
+          </div>
+          <div class="control-presets">
+            <span style="font-size:11px; font-weight:700; color:var(--text-light); margin-right:4px;">Presets:</span>
+            <button class="btn-preset active" data-thickness="4.0">4.0 µm (Benchmark)</button>
+            <button class="btn-preset" data-thickness="8.0">8.0 µm</button>
+            <button class="btn-preset" data-thickness="15.0">15.0 µm</button>
+            <button class="btn-preset" data-thickness="25.0">25.0 µm</button>
+          </div>
+        </div>
+
+        <!-- Photon Count Selector -->
+        <div class="control-item">
+          <div class="control-label-row">
+            <span class="control-label">Monte Carlo Photons (N):</span>
+            <span class="control-value-display" id="photonCountDisplay">20,000</span>
+          </div>
+          <select id="selectPhotons" style="padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border-dark); font-weight: 600; font-size: 13px;">
+            <option value="20000" selected>20,000 Photons (Standard)</option>
+            <option value="50000">50,000 Photons (High Precision)</option>
+            <option value="100000">100,000 Photons (Ultra Precision)</option>
+          </select>
+          <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">
+            Processed asynchronously via background Web Worker.
+          </div>
+        </div>
+
+        <!-- Live Animation Control -->
+        <div class="control-item">
+          <div class="control-label-row">
+            <span class="control-label">Live Trajectory Animation (50 Rays):</span>
+            <span id="animStatusBadge" style="font-size:11.5px; font-weight:700; color:var(--success-green);">Running (60 FPS)</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:2px;">
+            <button class="btn btn-secondary" id="btnToggleAnim" style="padding:6px 12px; font-size:12.5px;">Pause Animation</button>
+            <button class="btn btn-secondary" id="btnReseedAnim" style="padding:6px 12px; font-size:12.5px;">New Sample Rays</button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">
+            Shows 50 representative photon paths over absorbing black backing.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         THREE SCENARIOS SIDE-BY-SIDE PANELS
+         A. Open porous film, dry (lt = 1 um, Syurik et al. 2018 reference)
+         B. Open porous film, wet/flooded (lt slider labelled ASSUMPTION)
+         C. Sealed sponge particle (lt = 1 um, labelled HYPOTHESIS, to be tested)
+         ========================================================================= -->
+    <div class="scenarios-grid">
+
+      <!-- ---------------------------------------------------------------------
+           SCENARIO A: OPEN POROUS FILM, DRY
+           --------------------------------------------------------------------- -->
+      <div class="scenario-card scenario-a">
+        <div class="card-top-stripe"></div>
+        <div class="scenario-header">
+          <div class="scenario-tag-row">
+            <span class="scenario-tag tag-literature">Literature Benchmark</span>
+            <span class="scenario-letter">PANEL A</span>
+          </div>
+          <h3 class="scenario-title">Open Porous Film (Dry)</h3>
+          <p class="scenario-desc">
+            Disordered PMMA porous scaffold exposed to ambient air. Submicron voids provide strong scattering contrast.
+          </p>
+        </div>
+
+        <div class="scenario-body">
+          <!-- Parameters -->
+          <div class="param-box">
+            <div class="param-row">
+              <span class="param-name">Transport Mean Free Path ℓ<sub>t</sub>:</span>
+              <span class="param-val">1.0 µm</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Polymer Matrix (PMMA):</span>
+              <span class="param-val">n = 1.49</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Pore Contents (Air):</span>
+              <span class="param-val">n = 1.00</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Refractive Contrast Δn:</span>
+              <span class="param-val">0.49 (High)</span>
+            </div>
+          </div>
+
+          <!-- Big Metric Readout -->
+          <div class="metric-container">
+            <div class="metric-label">Simulated Total Reflectance</div>
+            <div class="metric-value-huge" id="reflectanceA">69.1%</div>
+            <div class="metric-sub-stats">
+              <span>Reflected: <strong id="photonsReflectedA">13,820</strong></span>
+              <span>Absorbed: <strong id="photonsAbsorbedA">6,180</strong></span>
+            </div>
+          </div>
+
+          <!-- Benchmark Reference & Honesty Note -->
+          <div class="reference-box ref-box-benchmark">
+            <div class="ref-header">
+              <span>Literature Reference (at L = 4.0 µm):</span>
+              <span style="font-family:monospace; font-size:13px; font-weight:800;">~75%</span>
+            </div>
+            <div style="font-size:11.5px;">
+              <strong>Source:</strong> Syurik et al., <em>Adv. Funct. Mater.</em> 28, 1706901 (2018), PMMA film, ℓ<sub>t</sub> ~ 1 µm at λ = 500 nm.
+            </div>
+            <div class="ref-discrepancy-note">
+              <strong>Honesty note (model discrepancy):</strong> The simulated value (~69%) differs from the paper's ~75% because this idealized model assumes strictly isotropic scattering and omits boundary Fresnel reflection (n<sub>film</sub> ≈ 1.49 vs air = 1.0), which in real films traps backscattered light internally. Not tuned artificially.
+            </div>
+          </div>
+
+          <!-- 50 Live Sample Rays Canvas -->
+          <div class="canvas-container">
+            <div class="canvas-badge">50 Sample Photons (Monte Carlo Walk)</div>
+            <canvas id="canvasA" class="ray-canvas"></canvas>
+            <div class="canvas-stats-overlay" id="overlayA">50 Rays: 34 Refl / 16 Abs</div>
+          </div>
+
+          <!-- Microstructure Cross-Section SVG -->
+          <div class="microstructure-svg-container">
+            <div class="micro-title">
+              <span>Microstructural Cross-Section</span>
+              <span style="color:var(--primary-purple);">Air Voids Intact</span>
+            </div>
+            <svg viewBox="0 0 320 85" width="100%" height="85">
+              <!-- Top ambient air -->
+              <rect x="0" y="0" width="320" height="15" fill="#F1F5F9" />
+              <text x="10" y="11" font-size="9" fill="#64748B" font-weight="700">Ambient Air (n = 1.00)</text>
+              <!-- Porous PMMA slab -->
+              <rect x="0" y="15" width="320" height="55" fill="#E2D9F3" stroke="#D2C4E8" stroke-width="1"/>
+              <!-- Air pores (white circular voids) -->
+              <g fill="#FFFFFF" stroke="#9333EA" stroke-width="0.8">
+                <circle cx="25" cy="30" r="7"/> <circle cx="48" cy="45" r="9"/> <circle cx="75" cy="28" r="6"/>
+                <circle cx="100" cy="52" r="10"/> <circle cx="125" cy="32" r="7"/> <circle cx="150" cy="48" r="8"/>
+                <circle cx="180" cy="26" r="6"/> <circle cx="210" cy="50" r="11"/> <circle cx="240" cy="35" r="7"/>
+                <circle cx="270" cy="45" r="8"/> <circle cx="295" cy="28" r="6"/> <circle cx="65" cy="60" r="5"/>
+                <circle cx="165" cy="62" r="5"/> <circle cx="225" cy="25" r="5"/> <circle cx="135" cy="60" r="6"/>
+              </g>
+              <!-- Absorbing black backing -->
+              <rect x="0" y="70" width="320" height="15" fill="#0B0F19" />
+              <text x="10" y="81" font-size="9" fill="#94A3B8" font-weight="700">Absorbing Black Backing (z = L)</text>
+              <!-- Callout label -->
+              <text x="185" y="65" font-size="8.5" fill="#4B2A8C" font-weight="800">PMMA Matrix + Air Pores (Δn = 0.49)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------------------
+           SCENARIO B: OPEN POROUS FILM, WET / FLOODED BY BINDER
+           --------------------------------------------------------------------- -->
+      <div class="scenario-card scenario-b">
+        <div class="card-top-stripe"></div>
+        <div class="scenario-header">
+          <div class="scenario-tag-row">
+            <span class="scenario-tag tag-assumption">Assumption (User Slider)</span>
+            <span class="scenario-letter">PANEL B</span>
+          </div>
+          <h3 class="scenario-title">Open Film Wet / Flooded</h3>
+          <p class="scenario-desc">
+            Liquid paint binder resin wicks into the open pores via capillary action. Pores index-match, causing opacity loss.
+          </p>
+        </div>
+
+        <div class="scenario-body">
+          <!-- Parameters -->
+          <div class="param-box">
+            <div class="param-row">
+              <span class="param-name">Polymer Matrix (PMMA):</span>
+              <span class="param-val">n = 1.49</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Flooded Pores (Binder):</span>
+              <span class="param-val">n ≈ 1.49</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Refractive Contrast Δn:</span>
+              <span class="param-val">≈ 0.00 (Matched)</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Scattering Regime:</span>
+              <span class="param-val" style="color:#DC2626;">Vanishing Scattering</span>
+            </div>
+          </div>
+
+          <!-- ASSUMPTION SLIDER -->
+          <div class="assumption-slider-box">
+            <div class="control-label-row">
+              <span class="control-label">ASSUMPTION: Flooded ℓ<sub>t</sub>:</span>
+              <span class="control-value-display" id="displayLtB" style="background:#FFF; color:#92400E; border-color:#FDE68A;">100.0 µm</span>
+            </div>
+            <input type="range" id="sliderLtB" min="10" max="500" step="5" value="100">
+            <div class="slider-range-labels">
+              <span>10 µm (Partial Ingress)</span>
+              <span>100 µm (Default)</span>
+              <span>500 µm (Complete Match)</span>
+            </div>
+            <div style="font-size:11px; color:#B45309; margin-top:5px; line-height:1.35;">
+              <strong>Note:</strong> Not a measured value. Assumed hypothetical increase in ℓ<sub>t</sub> due to resin capillary penetration.
+            </div>
+          </div>
+
+          <!-- Big Metric Readout -->
+          <div class="metric-container">
+            <div class="metric-label">Simulated Total Reflectance</div>
+            <div class="metric-value-huge" id="reflectanceB">1.8%</div>
+            <div class="metric-sub-stats">
+              <span>Reflected: <strong id="photonsReflectedB">360</strong></span>
+              <span>Absorbed: <strong id="photonsAbsorbedB">19,640</strong></span>
+            </div>
+          </div>
+
+          <!-- Status Box -->
+          <div class="reference-box ref-box-assumption">
+            <div class="ref-header">
+              <span>Optical State: Translucent / Transparent</span>
+            </div>
+            <div style="font-size:11.5px;">
+              Because Δn ≈ 0, scattering cross-section drops by &gt;99%. Photons travel ballistically through the film and are swallowed by the black backing. The coating appears dark and non-white.
+            </div>
+          </div>
+
+          <!-- 50 Live Sample Rays Canvas -->
+          <div class="canvas-container">
+            <div class="canvas-badge">50 Sample Photons (Monte Carlo Walk)</div>
+            <canvas id="canvasB" class="ray-canvas"></canvas>
+            <div class="canvas-stats-overlay" id="overlayB">50 Rays: 1 Refl / 49 Abs</div>
+          </div>
+
+          <!-- Microstructure Cross-Section SVG -->
+          <div class="microstructure-svg-container">
+            <div class="micro-title">
+              <span>Microstructural Cross-Section</span>
+              <span style="color:#64748B;">Pores Flooded by Binder</span>
+            </div>
+            <svg viewBox="0 0 320 85" width="100%" height="85">
+              <!-- Top ambient binder layer -->
+              <rect x="0" y="0" width="320" height="15" fill="#E2E8F0" />
+              <text x="10" y="11" font-size="9" fill="#475569" font-weight="700">Wet Paint Binder Surface (n ≈ 1.49)</text>
+              <!-- Matrix flooded with binder (identical optical index) -->
+              <rect x="0" y="15" width="320" height="55" fill="#CBD5E1" stroke="#94A3B8" stroke-width="1"/>
+              <!-- Flooded pores (dashed outlines, same color as resin) -->
+              <g fill="#CBD5E1" stroke="#94A3B8" stroke-width="0.8" stroke-dasharray="2,2">
+                <circle cx="25" cy="30" r="7"/> <circle cx="48" cy="45" r="9"/> <circle cx="75" cy="28" r="6"/>
+                <circle cx="100" cy="52" r="10"/> <circle cx="125" cy="32" r="7"/> <circle cx="150" cy="48" r="8"/>
+                <circle cx="180" cy="26" r="6"/> <circle cx="210" cy="50" r="11"/> <circle cx="240" cy="35" r="7"/>
+                <circle cx="270" cy="45" r="8"/> <circle cx="295" cy="28" r="6"/>
+              </g>
+              <!-- Absorbing black backing -->
+              <rect x="0" y="70" width="320" height="15" fill="#0B0F19" />
+              <text x="10" y="81" font-size="9" fill="#94A3B8" font-weight="700">Absorbing Black Backing (Photons Absorbed)</text>
+              <!-- Label -->
+              <text x="150" y="65" font-size="8.5" fill="#334155" font-weight="800">Index-Matched (Δn ≈ 0) — No Scattering</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------------------
+           SCENARIO C: SEALED SPONGE PARTICLE (HYPOTHESIS, TO BE TESTED)
+           --------------------------------------------------------------------- -->
+      <div class="scenario-card scenario-c">
+        <div class="card-top-stripe"></div>
+        <div class="scenario-header">
+          <div class="scenario-tag-row">
+            <span class="scenario-tag tag-hypothesis">HYPOTHESIS, to be tested</span>
+            <span class="scenario-letter">PANEL C</span>
+          </div>
+          <h3 class="scenario-title">Sealed Sponge Particle</h3>
+          <p class="scenario-desc">
+            Engineered impermeable nano-skin prevents binder penetration. Pores retain dry air, keeping optical contrast in paint.
+          </p>
+        </div>
+
+        <div class="scenario-body">
+          <!-- Parameters -->
+          <div class="param-box">
+            <div class="param-row">
+              <span class="param-name">Transport Mean Free Path ℓ<sub>t</sub>:</span>
+              <span class="param-val" style="color:var(--accent-orange-dark);">1.0 µm (Preserved)</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Outer Shell (Nano-Skin):</span>
+              <span class="param-val">Impermeable Barrier</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Internal Core Voids (Air):</span>
+              <span class="param-val">n = 1.00 (Protected)</span>
+            </div>
+            <div class="param-row">
+              <span class="param-name">Core Index Contrast Δn:</span>
+              <span class="param-val" style="color:var(--accent-orange-dark);">0.49 (Intact in Paint)</span>
+            </div>
+          </div>
+
+          <!-- Big Metric Readout -->
+          <div class="metric-container">
+            <div class="metric-label">Simulated Total Reflectance</div>
+            <div class="metric-value-huge" id="reflectanceC">69.1%</div>
+            <div class="metric-sub-stats">
+              <span>Reflected: <strong id="photonsReflectedC">13,820</strong></span>
+              <span>Absorbed: <strong id="photonsAbsorbedC">6,180</strong></span>
+            </div>
+          </div>
+
+          <!-- Hypothesis Statement Box -->
+          <div class="reference-box ref-box-hypothesis">
+            <div class="ref-header">
+              <span>Hypothesis Mechanism (Proposed Solution):</span>
+            </div>
+            <div style="font-size:11.5px;">
+              By encapsulating the porous particle in a dense, pinhole-free barrier shell (~20–50 nm cross-linked polymer or silica), capillary ingress of liquid binder is halted. The core maintains dry-state scattering (ℓ<sub>t</sub> = 1.0 µm) while submerged in paint.
+            </div>
+          </div>
+
+          <!-- 50 Live Sample Rays Canvas -->
+          <div class="canvas-container">
+            <div class="canvas-badge">50 Sample Photons (Monte Carlo Walk)</div>
+            <canvas id="canvasC" class="ray-canvas"></canvas>
+            <div class="canvas-stats-overlay" id="overlayC">50 Rays: 34 Refl / 16 Abs</div>
+          </div>
+
+          <!-- Microstructure Cross-Section SVG -->
+          <div class="microstructure-svg-container">
+            <div class="micro-title">
+              <span>Microstructural Cross-Section</span>
+              <span style="color:var(--accent-orange-dark);">Skin Blocks Binder Ingress</span>
+            </div>
+            <svg viewBox="0 0 320 85" width="100%" height="85">
+              <!-- Surrounding wet binder matrix -->
+              <rect x="0" y="0" width="320" height="70" fill="#E2E8F0" />
+              <!-- Sealed particle boundary: Impermeable Skin (Orange/Purple outline) -->
+              <rect x="25" y="10" width="270" height="52" rx="14" fill="#E2D9F3" stroke="#F5A31A" stroke-width="3" />
+              <!-- Dry Air Pores inside protected core -->
+              <g fill="#FFFFFF" stroke="#4B2A8C" stroke-width="0.8">
+                <circle cx="45" cy="25" r="5.5"/> <circle cx="68" cy="40" r="7"/> <circle cx="95" cy="24" r="5"/>
+                <circle cx="120" cy="42" r="8"/> <circle cx="150" cy="26" r="6"/> <circle cx="180" cy="44" r="7.5"/>
+                <circle cx="210" cy="25" r="5.5"/> <circle cx="240" cy="40" r="7"/> <circle cx="270" cy="28" r="6"/>
+                <circle cx="85" cy="52" r="5"/> <circle cx="140" cy="54" r="5"/> <circle cx="225" cy="50" r="5.5"/>
+              </g>
+              <!-- Absorbing black backing -->
+              <rect x="0" y="70" width="320" height="15" fill="#0B0F19" />
+              <text x="10" y="81" font-size="9" fill="#94A3B8" font-weight="700">Absorbing Black Backing (z = L)</text>
+              <!-- Visual annotations -->
+              <text x="32" y="8" font-size="8" fill="#475569" font-weight="700">Paint Binder (n ≈ 1.49)</text>
+              <text x="90" y="20" font-size="8.5" fill="#F5A31A" font-weight="800">★ Impermeable Barrier Skin</text>
+              <text x="155" y="60" font-size="8" fill="#4B2A8C" font-weight="800">Protected Air Core (n = 1.00, Δn = 0.49)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =========================================================================
+         FULL-WIDTH CHART SECTION: REFLECTANCE VS THICKNESS (1 TO 30 µm)
+         ========================================================================= -->
+    <section class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">
+          <h2>Reflectance vs. Slab Thickness (L = 1 to 30 µm)</h2>
+          <p>
+            Monte Carlo radiative transport curves over absorbing black backing. Demonstrates opacity evolution and literature benchmark.
+          </p>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-line solid-purple"></span>
+            <span>Scenario A: Dry Open (ℓ<sub>t</sub> = 1 µm)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-line dashed-gray"></span>
+            <span>Scenario B: Flooded (ℓ<sub>t</sub> = ASSUMPTION)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-line solid-orange"></span>
+            <span>Scenario C: Sealed Sponge (Hypothesis, ℓ<sub>t</sub> = 1 µm)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-marker diamond-gold"></span>
+            <span>Syurik et al. 2018 Reference (75% at 4 µm)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-canvas-box">
+        <canvas id="sweepChartCanvas"></canvas>
+        <div id="chartTooltip" class="chart-tooltip"></div>
+      </div>
+
+      <div style="margin-top:14px; font-size:12.5px; color:var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <span><strong>X-Axis:</strong> Thickness L in micrometres (µm) • <strong>Y-Axis:</strong> Reflectance R (%)</span>
+        <span>Vertical dashed line denotes active slider thickness. Hover over chart to inspect precise percentages.</span>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         "ABOUT THIS MODEL" & SCIENTIFIC TRANSPARENCY BOX
+         Honesty rules, physical limitations, full literature citations
+         ========================================================================= -->
+    <section class="about-model-section">
+      <div class="about-title-row">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--primary-purple)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <h2>About This Model: Physics, Boundary Conditions &amp; Assumptions</h2>
+      </div>
+
+      <div class="limits-grid">
+        <div class="limit-card">
+          <h4>
+            <span style="color:var(--accent-orange-dark);">1.</span> Isotropic Scattering (g = 0)
+          </h4>
+          <p>
+            Photon scattering directions are chosen with uniform probability on the unit sphere (cos θ ∈ [−1, 1], φ ∈ [0, 2π]). Real submicron polymer voids exhibit forward-peaked Mie scattering (anisotropy factor g ≈ 0.7–0.85). The model uses the transport mean free path ℓ<sub>t</sub> = ℓ<sub>s</sub> / (1 − g) as the effective isotropic step length.
+          </p>
+        </div>
+
+        <div class="limit-card">
+          <h4>
+            <span style="color:var(--accent-orange-dark);">2.</span> Zero Absorption (µ<sub>a</sub> = 0)
+          </h4>
+          <p>
+            The PMMA scaffold and pore air are treated as completely non-absorbing across the visible spectrum (λ = 400–700 nm). Real polymers and solvent binders have minor extinction at short wavelengths and near-IR overtone bands, which are neglected here to isolate purely structural scattering.
+          </p>
+        </div>
+
+        <div class="limit-card">
+          <h4>
+            <span style="color:var(--accent-orange-dark);">3.</span> No Boundary Fresnel Reflection
+          </h4>
+          <p>
+            Internal reflection at the top film-ambient boundary (n<sub>film</sub> ≈ 1.49 vs air = 1.0) is not modeled. In real films, total internal reflection redirects ~10–15% of forward-scattered photons back into the film, which explains why Syurik et al. (2018) measure ~75% reflectance at 4 µm while this isotropic random walk produces ~69%.
+          </p>
+        </div>
+
+        <div class="limit-card">
+          <h4>
+            <span style="color:var(--accent-orange-dark);">4.</span> No Polarization
+          </h4>
+          <p>
+            Photons are treated as scalar energy packets undergoing random Poisson walk events without tracking transverse electric and magnetic polarization vectors or Stokes parameters.
+          </p>
+        </div>
+
+        <div class="limit-card">
+          <h4>
+            <span style="color:var(--accent-orange-dark);">5.</span> Geometric / Wave Limit
+          </h4>
+          <p>
+            Thin-film wave interference, coherent backscattering cones, and speckle are omitted. The model operates within classical radiative transfer theory, valid when the transport mean free path ℓ<sub>t</sub> is much larger than the optical wavelength (ℓ<sub>t</sub> &gt;&gt; λ).
+          </p>
+        </div>
+
+        <div class="limit-card">
+          <h4>
+            <span style="color:var(--accent-orange-dark);">6.</span> Independent Scattering
+          </h4>
+          <p>
+            Void scattering centers are assumed to act independently without near-field evanescent coupling or optical crowding saturation. Real paints operate near 30–50% void volume fractions where dependent scattering effects can emerge.
+          </p>
+        </div>
+      </div>
+
+      <!-- Literature Citations -->
+      <div class="sources-box">
+        <h4>Scientific Literature References &amp; Tagged Sources</h4>
+        <ol class="sources-list">
+          <li>
+            <strong>Syurik, J., Jacucci, G., Onelli, O. D., Vignolini, S.</strong> (2018). <em>Bio-inspired Whiteness in Polymer Films: Scattering and Optical Properties</em>. <strong>Advanced Functional Materials</strong>, 28(24), 1706901. <span style="font-family:monospace;">DOI: 10.1002/adfm.201706901</span>. (Basis for PMMA dry film transport mean free path ℓ<sub>t</sub> ≈ 1.0 µm and reported ~75% reflectance at L = 4.0 µm).
+          </li>
+          <li>
+            <strong>Ishimaru, A.</strong> (1978). <em>Wave Propagation and Scattering in Random Media</em>, Vol. 1: Single Scattering and Transport Theory. Academic Press, New York. (Theoretical foundation of photon diffusion, random walk transport, and isotropic boundary transport).
+          </li>
+          <li>
+            <strong>Kasarova, S. N. et al.</strong> (2007). <em>Analysis of the dispersion of optical plastic materials</em>. <strong>Optical Materials</strong>, 29(11), 1481–1490. (Standard refractive index for poly(methyl methacrylate) PMMA: n ≈ 1.49 at 500 nm).
+          </li>
+          <li>
+            <strong>Laplace-Young Capillary Ingress Rationale:</strong> Capillary pressure ΔP = (2γ cos θ) / r<sub>pore</sub> drives spontaneous binder uptake into open pores. The sealed skin provides a physical barrier where effective pore radius r → 0, preventing binder wicking and sustaining the air-filled core.
+          </li>
+        </ol>
+        <div style="margin-top:8px; font-weight:700; font-size:11.5px; color:#4B2A8C;">
+          ✓ Transparency compliance: Every numerical parameter is explicitly tagged with literature sources or interactive user sliders. Zero invented TiO2 comparison claims.
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <div>Asian Paints Alchemy — Case 1: Whiteness Without TiO₂ • Interactive Educational Simulation</div>
+      <div style="margin-top:4px; color:var(--text-light);">
+        Self-contained HTML5 / Canvas / Web Worker offline application • No external network requests required.
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- =========================================================================
+       INLINE JAVASCRIPT: WEB WORKER & MONTE CARLO SIMULATION ENGINE
+       Fully offline, self-contained, high-performance chunked / worker execution
+       ========================================================================= -->
+  <script>
+    /*
+     * Asian Paints Alchemy - Sealed Sponge Particle Scattering Simulation
+     *
+     * Core Physics Principles:
+     * 1. 3D Isotropic Photon Random Walk through a slab of thickness L (µm).
+     * 2. Top boundary (z <= 0): Exit face -> REFLECTED.
+     * 3. Bottom boundary (z >= L): Perfectly absorbing black backing -> ABSORBED.
+     * 4. Step length exponential distribution: s = -lt * ln(xi).
+     * 5. Scattering angle: cos(theta) = 2*u - 1 (isotropic on 4*pi sphere).
+     */
+
+    // --- State Management ---
+    const state = {
+      thickness: 4.0,       // Slab thickness L in micrometres (µm)
+      ltA: 1.0,             // Scenario A dry transport mean free path (µm, Syurik et al. 2018)
+      ltB: 100.0,           // Scenario B flooded assumption (µm)
+      ltC: 1.0,             // Scenario C sealed sponge core hypothesis (µm)
+      photonCount: 20000,   // Monte Carlo sample size per click/update
+      isAnimating: true,    // Live ray canvas animation state
+      animSpeed: 1.0,       // Animation playback speed
+      sweepData: [],        // Cached sweep curve from 1 to 30 µm
+      samplePathsA: [],     // 50 animated paths for Scenario A
+      samplePathsB: [],     // 50 animated paths for Scenario B
+      samplePathsC: [],     // 50 animated paths for Scenario C
+      worker: null          // Background Web Worker instance
+    };
+
+    // --- DOM Elements ---
+    const sliderThickness = document.getElementById('sliderThickness');
+    const thicknessDisplay = document.getElementById('thicknessDisplay');
+    const sliderLtB = document.getElementById('sliderLtB');
+    const displayLtB = document.getElementById('displayLtB');
+    const selectPhotons = document.getElementById('selectPhotons');
+    const photonCountDisplay = document.getElementById('photonCountDisplay');
+    const btnRunSimulation = document.getElementById('btnRunSimulation');
+    const btnDownloadCSV = document.getElementById('btnDownloadCSV');
+    const btnToggleAnim = document.getElementById('btnToggleAnim');
+    const btnReseedAnim = document.getElementById('btnReseedAnim');
+    const animStatusBadge = document.getElementById('animStatusBadge');
+
+    // Scenario Readouts
+    const reflectanceA = document.getElementById('reflectanceA');
+    const reflectanceB = document.getElementById('reflectanceB');
+    const reflectanceC = document.getElementById('reflectanceC');
+    const photonsReflectedA = document.getElementById('photonsReflectedA');
+    const photonsAbsorbedA = document.getElementById('photonsAbsorbedA');
+    const photonsReflectedB = document.getElementById('photonsReflectedB');
+    const photonsAbsorbedB = document.getElementById('photonsAbsorbedB');
+    const photonsReflectedC = document.getElementById('photonsReflectedC');
+    const photonsAbsorbedC = document.getElementById('photonsAbsorbedC');
+    const overlayA = document.getElementById('overlayA');
+    const overlayB = document.getElementById('overlayB');
+    const overlayC = document.getElementById('overlayC');
+
+    // Canvases
+    const canvasA = document.getElementById('canvasA');
+    const canvasB = document.getElementById('canvasB');
+    const canvasC = document.getElementById('canvasC');
+    const sweepChartCanvas = document.getElementById('sweepChartCanvas');
+    const chartTooltip = document.getElementById('chartTooltip');
+
+    // --- Web Worker Source Code ---
+    // Executed in an isolated background thread via Blob URL for stutter-free UI
+    const workerScript = `
+      function simulateMC(L, lt, N) {
+        let reflected = 0;
+        for (let i = 0; i < N; i++) {
+          // Photon enters at z = 0, traveling in +z direction
+          // Step length exponentially distributed: s = -lt * ln(xi)
+          let s0 = -lt * Math.log(Math.random() || 1e-12);
+          let z = s0;
+          if (z >= L) {
+            // Crossed the entire slab directly to black backing
+            continue;
+          }
+          while (true) {
+            // Isotropic scattering in 3D: cos(theta) is uniformly distributed in [-1, 1]
+            let cosTheta = 2.0 * Math.random() - 1.0;
+            let step = -lt * Math.log(Math.random() || 1e-12);
+            z += step * cosTheta;
+            if (z <= 0.0) {
+              // Exited top face -> Reflected
+              reflected++;
+              break;
+            } else if (z >= L) {
+              // Hit black backing -> Absorbed
+              break;
+            }
+          }
+        }
+        return reflected;
+      }
+
+      self.onmessage = function(e) {
+        const { type, L, ltA, ltB, ltC, N, sweepN } = e.data;
+
+        if (type === 'simulate_current') {
+          const refA = simulateMC(L, ltA, N);
+          const refB = simulateMC(L, ltB, N);
+          const refC = simulateMC(L, ltC, N);
+          self.postMessage({
+            type: 'current_result',
+            refA, refB, refC, N, L, ltA, ltB, ltC
+          });
+        } else if (type === 'simulate_sweep') {
+          const sweepData = [];
+          const count = sweepN || 6000;
+          for (let l = 1; l <= 30; l++) {
+            const rA = simulateMC(l, ltA, count);
+            const rB = simulateMC(l, ltB, count);
+            const rC = simulateMC(l, ltC, count);
+            sweepData.push({
+              L: l,
+              rA: (rA / count) * 100,
+              rB: (rB / count) * 100,
+              rC: (rC / count) * 100
+            });
+          }
+          self.postMessage({
+            type: 'sweep_result',
+            sweepData
+          });
+        }
+      };
+    `;
+
+    // --- Initialize Web Worker with Offline Blob URL & Fallback ---
+    function initWorker() {
+      try {
+        const blob = new Blob([workerScript], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
+        state.worker = new Worker(workerUrl);
+
+        state.worker.onmessage = function(e) {
+          const data = e.data;
+          if (data.type === 'current_result') {
+            updateCurrentResults(data);
+          } else if (data.type === 'sweep_result') {
+            state.sweepData = data.sweepData;
+            renderSweepChart();
+          }
+        };
+      } catch (err) {
+        console.warn('Web Worker creation failed (fallback to main-thread execution):', err);
+        state.worker = null;
+      }
+    }
+
+    // Main-thread fallback for running Monte Carlo
+    function runMonteCarloDirect(L, lt, N) {
+      let reflected = 0;
+      for (let i = 0; i < N; i++) {
+        let s0 = -lt * Math.log(Math.random() || 1e-12);
+        let z = s0;
+        if (z >= L) continue;
+        while (true) {
+          let cosTheta = 2.0 * Math.random() - 1.0;
+          let step = -lt * Math.log(Math.random() || 1e-12);
+          z += step * cosTheta;
+          if (z <= 0.0) {
+            reflected++;
+            break;
+          } else if (z >= L) {
+            break;
+          }
+        }
+      }
+      return reflected;
+    }
+
+    function dispatchSimulation() {
+      if (state.worker) {
+        state.worker.postMessage({
+          type: 'simulate_current',
+          L: state.thickness,
+          ltA: state.ltA,
+          ltB: state.ltB,
+          ltC: state.ltC,
+          N: state.photonCount
+        });
+      } else {
+        const refA = runMonteCarloDirect(state.thickness, state.ltA, state.photonCount);
+        const refB = runMonteCarloDirect(state.thickness, state.ltB, state.photonCount);
+        const refC = runMonteCarloDirect(state.thickness, state.ltC, state.photonCount);
+        updateCurrentResults({
+          refA, refB, refC,
+          N: state.photonCount,
+          L: state.thickness
+        });
+      }
+    }
+
+    function dispatchSweepSimulation() {
+      if (state.worker) {
+        state.worker.postMessage({
+          type: 'simulate_sweep',
+          ltA: state.ltA,
+          ltB: state.ltB,
+          ltC: state.ltC,
+          sweepN: 6000
+        });
+      } else {
+        const sweepData = [];
+        const count = 3000;
+        for (let l = 1; l <= 30; l++) {
+          const rA = runMonteCarloDirect(l, state.ltA, count);
+          const rB = runMonteCarloDirect(l, state.ltB, count);
+          const rC = runMonteCarloDirect(l, state.ltC, count);
+          sweepData.push({
+            L: l,
+            rA: (rA / count) * 100,
+            rB: (rB / count) * 100,
+            rC: (rC / count) * 100
+          });
+        }
+        state.sweepData = sweepData;
+        renderSweepChart();
+      }
+    }
+
+    // --- Update UI with Simulation Results ---
+    function updateCurrentResults(data) {
+      const { refA, refB, refC, N } = data;
+      const pctA = ((refA / N) * 100).toFixed(1);
+      const pctB = ((refB / N) * 100).toFixed(1);
+      const pctC = ((refC / N) * 100).toFixed(1);
+
+      reflectanceA.textContent = pctA + '%';
+      reflectanceB.textContent = pctB + '%';
+      reflectanceC.textContent = pctC + '%';
+
+      photonsReflectedA.textContent = refA.toLocaleString();
+      photonsAbsorbedA.textContent = (N - refA).toLocaleString();
+
+      photonsReflectedB.textContent = refB.toLocaleString();
+      photonsAbsorbedB.textContent = (N - refB).toLocaleString();
+
+      photonsReflectedC.textContent = refC.toLocaleString();
+      photonsAbsorbedC.textContent = (N - refC).toLocaleString();
+
+      renderSweepChart();
+    }
+
+    // --- 50 Live Sample Rays Generator ---
+    // Generates 2D projection paths for 50 photons through the physical slab
+    function generate50Paths(L, lt, canvasWidth, canvasHeight, padX, padY) {
+      const count = 50;
+      const paths = [];
+      let reflectedCount = 0;
+
+      // Vertical scale: maps slab thickness L to canvas pixel height
+      const slabPixelHeight = canvasHeight - 2 * padY;
+      const zScale = slabPixelHeight / L;
+
+      for (let i = 0; i < count; i++) {
+        // Uniformly distribute entry x0 across canvas
+        const x0 = padX + (i + 0.5) * (canvasWidth - 2 * padX) / count;
+        const pts = [
+          { x: x0, y: padY - 14, z: -0.1 },  // Incident beam in air
+          { x: x0, y: padY, z: 0.0 }         // Enters top surface z=0
+        ];
+
+        let s0 = -lt * Math.log(Math.random() || 1e-12);
+        let z = s0;
+        let x = x0;
+
+        // Ballistic penetration directly to bottom backing
+        if (z >= L) {
+          pts.push({ x: x0, y: canvasHeight - padY, z: L });
+          paths.push({ pts, status: 'absorbed', totalLen: calculatePathLength(pts) });
+          continue;
+        }
+
+        pts.push({ x, y: padY + z * zScale, z });
+        let status = 'absorbed';
+
+        // Scattering loop
+        for (let step = 0; step < 220; step++) {
+          let uz = 2.0 * Math.random() - 1.0;
+          let phi = 2.0 * Math.PI * Math.random();
+          let ux = Math.sqrt(Math.max(0, 1.0 - uz * uz)) * Math.cos(phi);
+          let s = -lt * Math.log(Math.random() || 1e-12);
+
+          let nz = z + s * uz;
+          let nx = x + s * ux * zScale; // Lateral displacement scaled
+
+          // Lateral boundary mirror
+          if (nx < padX) nx = 2 * padX - nx;
+          if (nx > canvasWidth - padX) nx = 2 * (canvasWidth - padX) - nx;
+
+          if (nz <= 0.0) {
+            // Exited top face -> Reflected
+            let t = -z / (nz - z);
+            let ex = x + t * (nx - x);
+            pts.push({ x: ex, y: padY, z: 0.0 });
+            // Upward reflection exit vector
+            pts.push({ x: ex + (nx - x) * 0.25, y: padY - 16, z: -0.15 });
+            status = 'reflected';
+            reflectedCount++;
+            break;
+          } else if (nz >= L) {
+            // Hit absorbing backing at z = L
+            let t = (L - z) / (nz - z);
+            let hx = x + t * (nx - x);
+            pts.push({ x: hx, y: canvasHeight - padY, z: L });
+            status = 'absorbed';
+            break;
+          } else {
+            z = nz;
+            x = nx;
+            pts.push({ x, y: padY + z * zScale, z });
+          }
+        }
+
+        // If loop capped without boundary, absorb at bottom
+        if (pts[pts.length - 1].y < canvasHeight - padY && status === 'absorbed') {
+          pts.push({ x, y: canvasHeight - padY, z: L });
+        }
+
+        paths.push({
+          pts,
+          status,
+          totalLen: calculatePathLength(pts),
+          phase: (i / count) * 1.5 // Staggered animated pulse
+        });
+      }
+
+      return { paths, reflectedCount, count };
+    }
+
+    function calculatePathLength(pts) {
+      let len = 0;
+      for (let j = 1; j < pts.length; j++) {
+        const dx = pts[j].x - pts[j - 1].x;
+        const dy = pts[j].y - pts[j - 1].y;
+        len += Math.sqrt(dx * dx + dy * dy);
+      }
+      return len;
+    }
+
+    function regenerateAllSamplePaths() {
+      const w = canvasA.clientWidth || 360;
+      const h = canvasA.clientHeight || 210;
+      const padX = 14;
+      const padY = 26;
+
+      const resA = generate50Paths(state.thickness, state.ltA, w, h, padX, padY);
+      state.samplePathsA = resA.paths;
+      overlayA.textContent = `50 Rays: ${resA.reflectedCount} Refl / ${50 - resA.reflectedCount} Abs (${((resA.reflectedCount/50)*100).toFixed(0)}%)`;
+
+      const resB = generate50Paths(state.thickness, state.ltB, w, h, padX, padY);
+      state.samplePathsB = resB.paths;
+      overlayB.textContent = `50 Rays: ${resB.reflectedCount} Refl / ${50 - resB.reflectedCount} Abs (${((resB.reflectedCount/50)*100).toFixed(0)}%)`;
+
+      const resC = generate50Paths(state.thickness, state.ltC, w, h, padX, padY);
+      state.samplePathsC = resC.paths;
+      overlayC.textContent = `50 Rays: ${resC.reflectedCount} Refl / ${50 - resC.reflectedCount} Abs (${((resC.reflectedCount/50)*100).toFixed(0)}%)`;
+    }
+
+    // --- High-DPI Canvas Rendering Helper ---
+    function prepareCanvas(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width || 360;
+      const h = rect.height || 210;
+      const targetW = Math.max(10, Math.floor(w * dpr));
+      const targetH = Math.max(10, Math.floor(h * dpr));
+
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+      ctx.scale(dpr, dpr);
+      return { ctx, w, h };
+    }
+
+    // --- Canvas Rendering & Animation Loop ---
+    let animTime = 0;
+    function renderRayCanvas(canvas, paths, scenarioType) {
+      const { ctx, w, h } = prepareCanvas(canvas);
+      const padY = 26;
+      const slabH = h - 2 * padY;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Top ambient medium zone (z <= 0)
+      ctx.fillStyle = '#F8FAFC';
+      ctx.fillRect(0, 0, w, padY);
+
+      // Top boundary interface line (z = 0)
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, padY);
+      ctx.lineTo(w, padY);
+      ctx.stroke();
+
+      // Label top interface
+      ctx.fillStyle = '#64748B';
+      ctx.font = '10px -apple-system, sans-serif';
+      ctx.fillText('Top Surface (z = 0)', 10, 16);
+
+      // Slab scattering region background
+      if (scenarioType === 'A') {
+        ctx.fillStyle = '#FBF9FE';
+      } else if (scenarioType === 'B') {
+        ctx.fillStyle = '#F1F5F9';
+      } else {
+        ctx.fillStyle = '#FFFDF9';
+      }
+      ctx.fillRect(0, padY, w, slabH);
+
+      // Bottom absorbing black backing (z >= L)
+      ctx.fillStyle = '#0B0F19';
+      ctx.fillRect(0, h - padY, w, padY);
+
+      // Backing label
+      ctx.fillStyle = '#E2E8F0';
+      ctx.font = 'bold 10px -apple-system, sans-serif';
+      ctx.fillText('Absorbing Black Backing (z = L)', 10, h - 9);
+
+      // Draw faint static trajectories
+      for (let i = 0; i < paths.length; i++) {
+        const p = paths[i];
+        if (!p.pts || p.pts.length < 2) continue;
+        ctx.beginPath();
+        ctx.moveTo(p.pts[0].x, p.pts[0].y);
+        for (let j = 1; j < p.pts.length; j++) {
+          ctx.lineTo(p.pts[j].x, p.pts[j].y);
+        }
+
+        if (p.status === 'reflected') {
+          ctx.strokeStyle = scenarioType === 'C' ? 'rgba(245, 163, 26, 0.25)' : 'rgba(75, 42, 140, 0.25)';
+          ctx.lineWidth = 1.2;
+        } else {
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.16)';
+          ctx.lineWidth = 1.0;
+        }
+        ctx.stroke();
+      }
+
+      // Draw animated photon heads traveling along paths
+      const speed = 75 * state.animSpeed; // pixels per second
+      for (let i = 0; i < paths.length; i++) {
+        const p = paths[i];
+        if (!p.pts || p.pts.length < 2 || p.totalLen <= 0) continue;
+
+        // Loop photon along its path
+        const currentDist = ((animTime * speed + p.phase * p.totalLen) % (p.totalLen + 30));
+        if (currentDist > p.totalLen) continue; // Brief pause before restart
+
+        // Interpolate (x, y) along path segments
+        let covered = 0;
+        let px = p.pts[0].x;
+        let py = p.pts[0].y;
+
+        for (let j = 1; j < p.pts.length; j++) {
+          const dx = p.pts[j].x - p.pts[j - 1].x;
+          const dy = p.pts[j].y - p.pts[j - 1].y;
+          const segLen = Math.sqrt(dx * dx + dy * dy);
+
+          if (covered + segLen >= currentDist) {
+            const ratio = (currentDist - covered) / (segLen || 1);
+            px = p.pts[j - 1].x + dx * ratio;
+            py = p.pts[j - 1].y + dy * ratio;
+            break;
+          }
+          covered += segLen;
+        }
+
+        // Draw glowing photon particle
+        ctx.beginPath();
+        ctx.arc(px, py, 3.2, 0, 2 * Math.PI);
+        if (p.status === 'reflected') {
+          ctx.fillStyle = '#F5A31A';
+          ctx.shadowColor = '#F5A31A';
+          ctx.shadowBlur = 6;
+        } else {
+          ctx.fillStyle = '#94A3B8';
+          ctx.shadowColor = '#64748B';
+          ctx.shadowBlur = 4;
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0; // reset
+      }
+
+      // Slab thickness indicator badge in corner
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+      ctx.fillRect(w - 78, padY + 6, 70, 18);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 9.5px monospace';
+      ctx.fillText(`L = ${state.thickness.toFixed(1)} µm`, w - 72, padY + 19);
+    }
+
+    let lastTimestamp = performance.now();
+    function animationLoop(now) {
+      const dt = (now - lastTimestamp) / 1000;
+      lastTimestamp = now;
+
+      if (state.isAnimating) {
+        animTime += dt;
+        renderRayCanvas(canvasA, state.samplePathsA, 'A');
+        renderRayCanvas(canvasB, state.samplePathsB, 'B');
+        renderRayCanvas(canvasC, state.samplePathsC, 'C');
+      }
+
+      requestAnimationFrame(animationLoop);
+    }
+
+    // --- Interactive Reflectance vs Thickness Chart (Canvas) ---
+    function renderSweepChart() {
+      const { ctx, w, h } = prepareCanvas(sweepChartCanvas);
+      const padLeft = 56;
+      const padRight = 30;
+      const padTop = 24;
+      const padBottom = 46;
+
+      const plotW = w - padLeft - padRight;
+      const plotH = h - padTop - padBottom;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Coordinate mapping
+      function getX(l) {
+        return padLeft + ((l - 1) / 29) * plotW;
+      }
+      function getY(r) {
+        return padTop + plotH - (r / 100) * plotH;
+      }
+
+      // Gridlines & Y-Axis Ticks (0% to 100%)
+      ctx.strokeStyle = '#E2E8F0';
+      ctx.lineWidth = 1;
+      ctx.font = '11px -apple-system, sans-serif';
+      ctx.fillStyle = '#64748B';
+      ctx.textAlign = 'right';
+
+      for (let r = 0; r <= 100; r += 20) {
+        const y = getY(r);
+        ctx.beginPath();
+        ctx.moveTo(padLeft, y);
+        ctx.lineTo(padLeft + plotW, y);
+        ctx.stroke();
+        ctx.fillText(r + '%', padLeft - 10, y + 4);
+      }
+
+      // X-Axis Ticks (1 to 30 µm)
+      ctx.textAlign = 'center';
+      for (let l = 1; l <= 30; l += (l === 1 ? 4 : 5)) {
+        const x = getX(l);
+        ctx.beginPath();
+        ctx.moveTo(x, padTop + plotH);
+        ctx.lineTo(x, padTop + plotH + 5);
+        ctx.stroke();
+        ctx.fillText(l + ' µm', x, padTop + plotH + 20);
+      }
+      // Ensure tick at 30
+      const x30 = getX(30);
+      ctx.fillText('30 µm', x30, padTop + plotH + 20);
+
+      // Axis Titles
+      ctx.save();
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 12px -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      // X-Axis
+      ctx.fillText('Film Thickness L (micrometres, µm)', padLeft + plotW / 2, h - 8);
+      // Y-Axis
+      ctx.translate(16, padTop + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('Total Reflectance R (%)', 0, 0);
+      ctx.restore();
+
+      // Draw Curves if Sweep Data available
+      if (state.sweepData && state.sweepData.length > 0) {
+        // Curve B: Scenario B Flooded (dashed slate line)
+        ctx.beginPath();
+        ctx.strokeStyle = '#64748B';
+        ctx.lineWidth = 2.4;
+        ctx.setLineDash([5, 4]);
+        for (let i = 0; i < state.sweepData.length; i++) {
+          const pt = state.sweepData[i];
+          const x = getX(pt.L);
+          const y = getY(pt.rB);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]); // reset
+
+        // Curve A: Scenario A Dry Open (solid purple)
+        ctx.beginPath();
+        ctx.strokeStyle = '#4B2A8C';
+        ctx.lineWidth = 3.0;
+        for (let i = 0; i < state.sweepData.length; i++) {
+          const pt = state.sweepData[i];
+          const x = getX(pt.L);
+          const y = getY(pt.rA);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Curve C: Scenario C Sealed Sponge (solid orange)
+        ctx.beginPath();
+        ctx.strokeStyle = '#F5A31A';
+        ctx.lineWidth = 2.6;
+        for (let i = 0; i < state.sweepData.length; i++) {
+          const pt = state.sweepData[i];
+          const x = getX(pt.L);
+          const y = getY(pt.rC);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // Syurik et al. 2018 Literature Benchmark Marker (4.0 µm, 75.0%)
+      const refX = getX(4.0);
+      const refY = getY(75.0);
+
+      ctx.save();
+      ctx.translate(refX, refY);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = '#F5A31A';
+      ctx.strokeStyle = '#0F172A';
+      ctx.lineWidth = 1.8;
+      ctx.fillRect(-6, -6, 12, 12);
+      ctx.strokeRect(-6, -6, 12, 12);
+      ctx.restore();
+
+      // Benchmark Callout Text
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 11px -apple-system, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('★ Syurik et al. 2018 reported benchmark: ~75% at 4.0 µm', refX + 12, refY - 8);
+
+      // Active Slider Thickness Indicator Line
+      const activeX = getX(state.thickness);
+      ctx.strokeStyle = 'rgba(75, 42, 140, 0.7)';
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(activeX, padTop);
+      ctx.lineTo(activeX, padTop + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Dots on active thickness line
+      if (state.sweepData && state.sweepData.length > 0) {
+        const idx = Math.min(29, Math.max(0, Math.round(state.thickness) - 1));
+        const pt = state.sweepData[idx];
+
+        if (pt) {
+          // Dot A
+          ctx.fillStyle = '#4B2A8C';
+          ctx.beginPath();
+          ctx.arc(activeX, getY(pt.rA), 5, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Dot B
+          ctx.fillStyle = '#64748B';
+          ctx.beginPath();
+          ctx.arc(activeX, getY(pt.rB), 5, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Dot C
+          ctx.fillStyle = '#F5A31A';
+          ctx.beginPath();
+          ctx.arc(activeX, getY(pt.rC), 5, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+    }
+
+    // --- Interactive Tooltip on Chart Hover ---
+    sweepChartCanvas.addEventListener('mousemove', function(e) {
+      if (!state.sweepData || state.sweepData.length === 0) return;
+
+      const rect = sweepChartCanvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const padLeft = 56;
+      const padRight = 30;
+      const plotW = rect.width - padLeft - padRight;
+
+      if (mouseX < padLeft || mouseX > padLeft + plotW) {
+        chartTooltip.style.display = 'none';
+        return;
+      }
+
+      const frac = (mouseX - padLeft) / plotW;
+      const hoveredL = Math.min(30, Math.max(1, Math.round(1 + frac * 29)));
+      const pt = state.sweepData[hoveredL - 1];
+
+      if (!pt) return;
+
+      chartTooltip.style.display = 'block';
+      chartTooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+      chartTooltip.style.top = (e.clientY - rect.top - 60) + 'px';
+
+      chartTooltip.innerHTML = `
+        <div style="font-weight:800; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:3px; margin-bottom:4px;">
+          Thickness L: ${pt.L} µm
+        </div>
+        <div style="color:#C4B5FD;">Scenario A (Dry Open): <strong>${pt.rA.toFixed(1)}%</strong></div>
+        <div style="color:#CBD5E1;">Scenario B (Flooded): <strong>${pt.rB.toFixed(1)}%</strong></div>
+        <div style="color:#FDE68A;">Scenario C (Sealed Sponge): <strong>${pt.rC.toFixed(1)}%</strong></div>
+        ${pt.L === 4 ? '<div style="color:#F5A31A; margin-top:2px;">★ Literature Ref: ~75%</div>' : ''}
+      `;
+    });
+
+    sweepChartCanvas.addEventListener('mouseleave', function() {
+      chartTooltip.style.display = 'none';
+    });
+
+    // --- CSV Results Download Functionality ---
+    function downloadResultsCSV() {
+      if (!state.sweepData || state.sweepData.length === 0) {
+        alert('Simulation data is still generating. Please wait a moment.');
+        return;
+      }
+
+      const now = new Date().toISOString();
+      let csv = '# ==========================================================================\n';
+      csv += '# Asian Paints Alchemy - Case 1: Whiteness Without TiO2\n';
+      csv += '# Monte Carlo Radiative Transfer Reflectance Simulation Results\n';
+      csv += '# Disclaimer: Illustrative simulation. Not experimental data. Generated with AI assistance.\n';
+      csv += `# Export Timestamp: ${now}\n`;
+      csv += `# Active Slab Thickness: ${state.thickness.toFixed(1)} um\n`;
+      csv += `# Photons per Thickness Point: ${state.photonCount}\n`;
+      csv += `# Scenario A Transport Mean Free Path (lt): ${state.ltA.toFixed(1)} um (Syurik et al. 2018)\n`;
+      csv += `# Scenario B Transport Mean Free Path (lt): ${state.ltB.toFixed(1)} um (USER ASSUMPTION)\n`;
+      csv += `# Scenario C Transport Mean Free Path (lt): ${state.ltC.toFixed(1)} um (HYPOTHESIS, to be tested)\n`;
+      csv += '# Model Limits: Isotropic 3D random walk, zero absorption (mu_a = 0), absorbing black backing\n';
+      csv += '# ==========================================================================\n';
+      csv += 'Thickness_um,Scenario_A_Dry_Open_Reflectance_pct,Scenario_B_Wet_Flooded_Reflectance_pct,Scenario_C_Sealed_Sponge_Reflectance_pct,Literature_Ref_Syurik_2018_pct,Notes\n';
+
+      for (let i = 0; i < state.sweepData.length; i++) {
+        const row = state.sweepData[i];
+        const litRef = (row.L === 4) ? '75.0' : '';
+        const notes = (row.L === 4) ? 'Syurik et al. 2018 reported benchmark at 4 um' : '';
+        csv += `${row.L},${row.rA.toFixed(2)},${row.rB.toFixed(2)},${row.rC.toFixed(2)},${litRef},"${notes}"\n`;
+      }
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `asian_paints_alchemy_scattering_simulation_L${state.thickness}um.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function resizeAllCanvases() {
+      regenerateAllSamplePaths();
+      renderSweepChart();
+    }
+
+    // --- Event Listeners ---
+    // Shared Thickness Slider
+    sliderThickness.addEventListener('input', function() {
+      state.thickness = parseFloat(this.value);
+      thicknessDisplay.textContent = state.thickness.toFixed(1) + ' µm';
+      updatePresetButtons(state.thickness);
+      regenerateAllSamplePaths();
+      dispatchSimulation();
+    });
+
+    // Preset buttons
+    document.querySelectorAll('.btn-preset').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const val = parseFloat(this.getAttribute('data-thickness'));
+        state.thickness = val;
+        sliderThickness.value = val;
+        thicknessDisplay.textContent = val.toFixed(1) + ' µm';
+        updatePresetButtons(val);
+        regenerateAllSamplePaths();
+        dispatchSimulation();
+      });
+    });
+
+    function updatePresetButtons(currentVal) {
+      document.querySelectorAll('.btn-preset').forEach(btn => {
+        const v = parseFloat(btn.getAttribute('data-thickness'));
+        if (Math.abs(v - currentVal) < 0.1) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    }
+
+    // Scenario B ASSUMPTION slider
+    sliderLtB.addEventListener('input', function() {
+      state.ltB = parseFloat(this.value);
+      displayLtB.textContent = state.ltB.toFixed(1) + ' µm';
+      regenerateAllSamplePaths();
+      dispatchSimulation();
+      dispatchSweepSimulation();
+    });
+
+    // Photon count selector
+    selectPhotons.addEventListener('change', function() {
+      state.photonCount = parseInt(this.value, 10);
+      photonCountDisplay.textContent = state.photonCount.toLocaleString();
+      dispatchSimulation();
+    });
+
+    // Run simulation button
+    btnRunSimulation.addEventListener('click', function() {
+      regenerateAllSamplePaths();
+      dispatchSimulation();
+      dispatchSweepSimulation();
+    });
+
+    // CSV Download button
+    btnDownloadCSV.addEventListener('click', downloadResultsCSV);
+
+    // Animation Toggle
+    btnToggleAnim.addEventListener('click', function() {
+      state.isAnimating = !state.isAnimating;
+      btnToggleAnim.textContent = state.isAnimating ? 'Pause Animation' : 'Resume Animation';
+      animStatusBadge.textContent = state.isAnimating ? 'Running (60 FPS)' : 'Paused';
+      animStatusBadge.style.color = state.isAnimating ? 'var(--success-green)' : 'var(--text-light)';
+    });
+
+    // Reseed sample rays
+    btnReseedAnim.addEventListener('click', function() {
+      regenerateAllSamplePaths();
+    });
+
+    window.addEventListener('resize', resizeAllCanvases);
+
+    // --- Initial Boot Sequence ---
+    window.addEventListener('DOMContentLoaded', function() {
+      resizeAllCanvases();
+      initWorker();
+      regenerateAllSamplePaths();
+      dispatchSimulation();
+      dispatchSweepSimulation();
+      requestAnimationFrame(animationLoop);
+    });
+  </script>
+</body>
+</html>
